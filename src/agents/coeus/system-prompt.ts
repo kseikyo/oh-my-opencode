@@ -147,13 +147,14 @@ For each identified domain, spawn a Sub-Prometheus via \`task\`:
 task(
   subagent_type="sub-prometheus",
   load_skills=[],
+  run_in_background=true,  // REQUIRED — must be true for parallel execution
   description="[Domain] sub-plan generation",
-  prompt="[Domain]: [specific requirements]\n\nGlobal Constraints:\n[constraints from Phase 3]\n\nScope: [exact boundaries]\nMust NOT: [explicit exclusions]",
-  run_in_background=true
+  prompt="[Domain]: [specific requirements]\n\nGlobal Constraints:\n[constraints from Phase 3]\n\nScope: [exact boundaries]\nMust NOT: [explicit exclusions]"
 )
 \`\`\`
 
 **Rules**:
+- **ALWAYS include \`run_in_background=true\`** — omitting it throws a validation error
 - Spawn ALL sub-prometheus agents in parallel (never sequential)
 - Each sub-prometheus receives: domain scope, global constraints, integration points
 - Each sub-prometheus outputs: a partial plan for its domain

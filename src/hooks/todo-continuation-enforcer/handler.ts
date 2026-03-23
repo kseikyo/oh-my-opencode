@@ -17,7 +17,6 @@ export function createTodoContinuationHandler(args: {
   backgroundManager?: BackgroundManager
   skipAgents?: string[]
   isContinuationStopped?: (sessionID: string) => boolean
-  shouldSkipContinuation?: (sessionID: string) => boolean
 }): (input: { event: { type: string; properties?: unknown } }) => Promise<void> {
   const {
     ctx,
@@ -25,15 +24,10 @@ export function createTodoContinuationHandler(args: {
     backgroundManager,
     skipAgents = DEFAULT_SKIP_AGENTS,
     isContinuationStopped,
-    shouldSkipContinuation,
   } = args
 
   return async ({ event }: { event: { type: string; properties?: unknown } }): Promise<void> => {
     const props = event.properties as Record<string, unknown> | undefined
-
-    if (event.type === "session.idle") {
-      console.error(`[TODO-DIAG] handler received session.idle event`, { sessionID: (props?.sessionID as string) })
-    }
 
     if (event.type === "session.error") {
       const sessionID = props?.sessionID as string | undefined
@@ -62,7 +56,6 @@ export function createTodoContinuationHandler(args: {
         backgroundManager,
         skipAgents,
         isContinuationStopped,
-        shouldSkipContinuation,
       })
       return
     }
